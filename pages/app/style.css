@@ -134,7 +134,7 @@ nav {
   background: none;
   border: 1px solid var(--dark-blue);
   outline: none;
-  color: var(--dark-blue);
+  color: #fff;
 }
 
 .main__section--top form input::placeholder {

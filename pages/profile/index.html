@@ -13,6 +13,7 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="../../main.css" />
+    <link rel="stylesheet" href="../app/style.css" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -29,11 +30,10 @@
         <!-- Profile ends -->
 
         <!-- Nav starts -->
-
         <nav>
           <ul class="menu__list">
-            <li class="menu__list__item active">
-              <a href="index.html" class="nav__link">
+            <li class="menu__list__item">
+              <a href="/pages/app/index.html" class="nav__link">
                 <div class="list__icon">
                   <i class="fa-solid fa-house"></i>
                 </div>
@@ -56,8 +56,8 @@
                 <span>Recents</span>
               </a>
             </li>
-            <li class="menu__list__item">
-              <a href="/pages/profile/index.html" class="nav__link">
+            <li class="menu__list__item active">
+              <a href="index.html" class="nav__link">
                 <div class="list__icon">
                   <i class="fa-solid fa-user"></i>
                 </div>
@@ -77,41 +77,33 @@
 
         <!-- Nav ends -->
       </aside>
-      <!-- Main Sections starts -->
-      <!-- Section Top starts -->
-      <section class="main__section">
-        <div class="main__section--top">
-          <form>
-            <div class="search__icon">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </div>
-            <input type="text" placeholder="Search" />
-          </form>
-          <button class="add__btn">
-            <i class="fa-solid fa-plus"></i>
-          </button>
-        </div>
-        <!-- Section Top ends -->
-        <!-- Section Bottom starts -->
-        <div class="section__bottom">
-          <div class="section__titles">
-            <p class="name__title">Name</p>
-            <p class="price__title">Price</p>
-            <p class="date__title">Date</p>
+      <!-- Profile Section starts -->
+      <div class="profile__section">
+        <p class="profile__section__name">Alina Castaneda</p>
+        <p>
+          username: <span class="profile__section__email"> alinacasta </span>
+        </p>
+        <p>password: <span class="profile__section__password">ac123</span></p>
+        <div class="info__boxes">
+          <div class="info__box info__box--profit">
+            <span class="info__box__title">Total Profit</span>
+            <span class="info__box__desc">12.000.000$</span>
+            <span class="info__box__sub"
+              >average profit per year 4.000.000$</span
+            >
           </div>
-          <ul class="sales__list">
-            <li class="profit">
-              <span class="sale__name">3 bedroom penthouse</span>
-              <span class="sale__price">$1,200,000</span>
-              <span class="sale__date">15th April 2023</span>
-              <button class="delete__btn">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
-            </li>
-          </ul>
+          <div class="info__box info__box--sales">
+            <span class="info__box__title">Total Sales</span>
+            <span class="info__box__desc">36</span>
+          </div>
+          <div class="info__box info__box--recent">
+            <span class="info__box__title">2023 Profit</span>
+            <span class="info__box__desc">1.500.000$</span>
+            <span class="info__box__sub">average profit per sell 480.000$</span>
+          </div>
         </div>
-        <!-- Section Bottom ends -->
-      </section>
+      </div>
+      <!-- Profile Section ends -->
     </main>
     <script src="../../script.js"></script>
   </body>
