@@ -6,6 +6,8 @@
   --pink: #f570b5;
   --green: #84cca4;
   --yellow: #cb9770;
+
+  --transition: all 200ms linear;
 }
 
 * {
