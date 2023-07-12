@@ -16,15 +16,17 @@ aside {
   padding: 15px;
   width: 200px;
   border-radius: 10px;
+  margin-right: 20px;
 }
 
+/* Profile starts */
 .profile {
   display: flex;
   align-items: flex-start;
   margin-bottom: 75px;
 }
 
-.profile--picture {
+.profile__picture {
   width: 40px;
   height: 40px;
   border-radius: 5px;
@@ -35,20 +37,23 @@ aside {
   margin-right: 10px;
 }
 
-.profile--name {
+.profile__name {
   font-size: 12px;
   font-weight: 400;
 }
 
-.profile--email {
+.profile__email {
   font-size: 9px;
 }
 
+/* Profile ends */
+
+/* Menu starts */
 nav {
   height: 100%;
 }
 
-.menu--list {
+.menu__list {
   list-style: none;
   text-align: center;
   height: 100%;
@@ -56,25 +61,25 @@ nav {
   flex-direction: column;
 }
 
-.menu--list--item,
-.logout--link {
+.menu__list__item,
+.logout__link {
   border-radius: 10px;
   padding: 8px 15px;
   margin-bottom: 5px;
-  transition: var(--transition);
+  transition: var(__transition);
 }
 
-.menu--list--item.active,
-.menu--list--item:hover,
-.logout--link:hover {
-  background-color: var(--light-blue);
+.menu__list__item.active,
+.menu__list__item:hover,
+.logout__link:hover {
+  background-color: var(__light-blue);
 }
 
-.menu--list--item:last-child {
+.menu__list__item:last-child {
   justify-self: flex-end;
 }
 
-.nav--link {
+.nav__link {
   font-size: 12px;
   display: flex;
   align-items: center;
@@ -82,13 +87,75 @@ nav {
   color: #fff;
 }
 
-.list--icon {
+.list__icon {
   color: #fff;
   margin-right: 15px;
 }
 
-.list--icon i {
+.list__icon i {
   color: #fff;
   display: block;
+  font-size: 20px;
+}
+
+/* Menu Ends */
+
+/* Main Section starts */
+
+.main__section {
+  flex: 1;
+}
+
+.main__section--top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.main__section--top form {
+  position: relative;
+}
+
+.search__icon {
+  position: absolute;
+  left: 15px;
+  top: 8px;
+}
+
+.search__icon i {
+  color: var(--dark-blue);
+}
+
+.main__section--top form input {
+  display: inline-block;
+  width: 200px;
+  padding: 8px 10px 8px 50px;
+  background: none;
+  border: 1px solid var(--dark-blue);
+  outline: none;
+  color: var(--dark-blue);
+}
+
+.main__section--top form input::placeholder {
+  color: var(--dark-blue);
+}
+
+.add__btn {
+  background-color: var(--pink);
+  border-radius: 50%;
+  border: none;
+  padding: 8px;
+  height: 40px;
+  width: 40px;
+  color: #fff;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.add__btn:hover {
+  opacity: 0.7;
+}
+
+.add__btn i {
   font-size: 20px;
 }
