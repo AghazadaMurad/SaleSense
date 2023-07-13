@@ -11,6 +11,7 @@ const months = [
   "Aug",
   "Sep",
   "Oct",
+  "Nov",
   "Dec",
 ];
 
@@ -198,141 +199,153 @@ const profilePicture = document.querySelector(".profile__picture");
 
 let currentAccount;
 
-const displaySales = (sales) => {
+const displaySales = (actions) => {
   salesListEl.innerHTML = "";
 
-  sales.forEach((sale) => {
-    const html = `
-      <li class=${sale.type}>
-      <span class="sale__name">${sale.name}</span>
-      <span class="sale__price">$${sale.price}</span>
-      <span class="sale__date">${displayDate(sale.date)}</span>
-      <button class="delete__btn">
-        <i class="fa-solid fa-trash-can"></i>
-      </button>
-    </li>
-      `;
+  actions.forEach((action) => {
+    const html = `<li class="${action.type}">
+    <span class="sale__name">${action.name}</span>
+    <span class="sale__price">$${action.price}</span>
+    <span class="sale__date">${displayDate(action.date)}</span>
+    <button class="delete__btn">
+      <i class="fa-solid fa-trash-can"></i>
+    </button>
+  </li>`;
 
-    salesListEl.insertAdjacentHTML("beforeend", html);
+    salesListEl.innerHTML += html;
   });
 };
 
 const displayProfileInfo = (account) => {
   profileName.textContent = account.name;
   profileEmail.textContent = account.email;
-  profilePicture.style.backgroundImage = `url("../../Images/${account.img}.jpg")`;
+  profilePicture.style.backgroundImage = `url("Images/${account.img}.jpg")`;
 };
 
-const displayBalance = (account) => {
-  const profits = account.actions.filter((action) => action.type === "profit");
-
-  const recentYearProfits = account.actions.filter(
-    (action) => action.type === "profit" && action.date.slice(0, 4) === "2023"
-  );
-
-  const expenses = account.actions.filter(
-    (action) => action.type === "expense"
-  );
-
-  const recentYearExpenses = account.actions.filter(
-    (action) => action.type === "expense" && action.date.slice(0, 4) === "2023"
-  );
-
-  const totalProfit = profits.reduce((sum, profit) => sum + +profit.price, 0);
-  const totalRecentProfit = recentYearProfits.reduce(
-    (sum, profit) => sum + +profit.price,
-    0
-  );
-  const totalExpense = expenses.reduce(
-    (sum, expense) => sum + +expense.price,
-    0
-  );
-  const totalRecentExpense = recentYearExpenses.reduce(
-    (sum, expense) => sum + +expense.price,
-    0
-  );
-
-  const balance = totalProfit - totalExpense;
-  const recentBalance = totalRecentProfit - totalRecentExpense;
-
-  const activeYears = account.actions.map((action) => action.date.slice(0, 4));
-
-  const uniqueActiveYears = new Set(activeYears);
-
-  totalProfitEl.textContent = `${balance}$`;
-  totalSalesEl.textContent = profits.length;
+const displayProfileBalance = (account) => {
   profileSectionName.textContent = account.name;
   profileSectionUserName.textContent = account.username;
   profileSectionPassword.textContent = account.password;
 
-  recentProfitEl.textContent = `${recentBalance}$`;
+  // Calculating total profit
+  const profits = account.actions.filter((action) => action.type === "profit");
+  const totalProfits = profits.reduce(
+    (sum, profit) => (sum += +profit.price),
+    0
+  );
 
-  perYearEl.textContent = `average profit per year ${
-    balance / uniqueActiveYears.size
-  }$`;
+  // Calculating recent profit
+  const recentProfits = account.actions.filter(
+    (action) => action.type === "profit" && action.date.slice(0, 4) === "2023"
+  );
+  const totalRecentProfits = recentProfits.reduce(
+    (sum, profit) => (sum += +profit.price),
+    0
+  );
 
+  // Calculating recent expenses
+  const recentExpenses = account.actions.filter(
+    (action) => action.type === "expense" && action.date.slice(0, 4) === "2023"
+  );
+
+  const totalRecentExpenses = recentExpenses.reduce(
+    (sum, profit) => (sum += +profit.price),
+    0
+  );
+
+  // // Calculating total expense
+  const expenses = account.actions.filter(
+    (action) => action.type === "expense"
+  );
+  const totalExpenses = expenses.reduce(
+    (sum, expense) => (sum += +expense.price),
+    0
+  );
+
+  // Calucating recent balance
+
+  const recentBalance = totalRecentProfits - totalRecentExpenses;
+
+  // Calculating balance
+  const balance = totalProfits - totalExpenses;
+
+  const activeYears = new Set(
+    account.actions.map((action) => {
+      return action.date.slice(0, 4);
+    })
+  );
+
+  // Calculating per year income
+  const profitPerYear = balance / activeYears.size;
+
+  // Displaying html content
+  totalProfitEl.textContent = `$${balance}`;
+  perYearEl.textContent = `average profit per year ${profitPerYear}$`;
+  totalSalesEl.textContent = profits.length;
+  recentProfitEl.textContent = `$${recentBalance}`;
   perSelEl.textContent = `average profit per sell ${
-    recentBalance / recentYearProfits.length
+    recentProfits.length > 0 ? recentBalance / recentProfits.length : 0
   }$`;
 };
 
-signInBtn.addEventListener("click", (e) => {
-  e.preventDefault();
+navLinks.forEach((link) => {
+  link.addEventListener("click", function (e) {
+    if (this.id === "sells") {
+      displaySales(
+        currentAccount.actions.filter((action) => action.type === "profit")
+      );
+    }
+
+    if (this.id === "home") {
+      displaySales(currentAccount.actions);
+      displayProfileInfo(currentAccount);
+    }
+
+    if (this.id === "recents") {
+      displaySales(currentAccount.actions.slice(0, 4));
+    }
+
+    if (this.id === "profile") {
+      mainSection.classList.add("hidden");
+      profileSection.classList.remove("hidden");
+      displayProfileBalance(currentAccount);
+    } else {
+      mainSection.classList.remove("hidden");
+      profileSection.classList.add("hidden");
+    }
+  });
+});
+
+logoutBtn.addEventListener("click", () => {
+  app.classList.add("hidden");
+  signInForm.classList.remove("hidden");
+});
+
+signInBtn.addEventListener("click", () => {
   currentAccount = accounts.find(
     (account) => account.username === userNameInput.value
   );
 
   if (currentAccount.password === passwordInput.value) {
-    signInForm.classList.add("hidden");
-    profileSection.classList.add("hidden");
-    mainSection.classList.remove("hidden");
     app.classList.remove("hidden");
+    signInForm.classList.add("hidden");
+    mainSection.classList.remove("hidden");
+    profileSection.classList.add("hidden");
 
     displaySales(currentAccount.actions);
     displayProfileInfo(currentAccount);
   }
 
-  userNameInput.value = "";
   passwordInput.value = "";
-});
-
-navLinks.forEach((link) => {
-  link.addEventListener("click", function (e) {
-    e.preventDefault();
-
-    if (this.id === "profile") {
-      profileSection.classList.remove("hidden");
-      mainSection.classList.add("hidden");
-      displayBalance(currentAccount);
-    } else {
-      profileSection.classList.add("hidden");
-      mainSection.classList.remove("hidden");
-      displayProfileInfo(currentAccount);
-      displaySales(currentAccount.actions);
-    }
-
-    if (this.id === "recents") {
-      displayProfileInfo(currentAccount);
-      displaySales(currentAccount.actions.slice(0, 4));
-    }
-
-    if (this.id === "sells") {
-      displayProfileInfo(currentAccount);
-      displaySales(
-        currentAccount.actions.filter((action) => action.type === "profit")
-      );
-    }
-  });
-});
-
-logoutBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  currentAccount = undefined;
-  app.classList.add("hidden");
-  signInForm.classList.remove("hidden");
+  userNameInput.value = "";
 });
 
 const displayDate = (date) => {
   const [year, month, day] = date.split("-");
-  return `${months[month[1] - 1]} ${day} ${year}`;
+
+  if (month[0] === 0) {
+    return `${months[month[1] - 1]} ${day} ${year}`;
+  } else {
+    return `${months[month - 1]} ${day} ${year}`;
+  }
 };
