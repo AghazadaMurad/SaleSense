@@ -169,6 +169,17 @@ const signInBtn = document.querySelector(".signin-button");
 const navLinks = document.querySelectorAll(".menu__list__item");
 const logoutBtn = document.getElementById("logout");
 
+const searchInput = document.getElementById("search");
+const modal = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay");
+const modalNameInput = document.getElementById("actionName");
+const modalPriceInput = document.getElementById("actionPrice");
+const modalDateInput = document.getElementById("actionDate");
+const modalTypeInput = document.getElementById("actionType");
+const submitBtn = document.querySelector(".submit");
+const addBtn = document.querySelector(".add__btn");
+const closeBtn = document.querySelector(".close__btn");
+
 const app = document.querySelector(".app");
 const signInForm = document.querySelector(".signin-form");
 const profileSection = document.querySelector(".profile__section");
@@ -290,6 +301,14 @@ const displayProfileBalance = (account) => {
 
 navLinks.forEach((link) => {
   link.addEventListener("click", function (e) {
+    for (const navLink of navLinks) {
+      navLink.classList.remove("active");
+    }
+
+    searchInput.value = "";
+
+    this.classList.add("active");
+
     if (this.id === "sells") {
       displaySales(
         currentAccount.actions.filter((action) => action.type === "profit")
@@ -299,6 +318,9 @@ navLinks.forEach((link) => {
     if (this.id === "home") {
       displaySales(currentAccount.actions);
       displayProfileInfo(currentAccount);
+      searchInput.classList.remove("hidden");
+    } else {
+      searchInput.classList.add("hidden");
     }
 
     if (this.id === "recents") {
@@ -321,7 +343,8 @@ logoutBtn.addEventListener("click", () => {
   signInForm.classList.remove("hidden");
 });
 
-signInBtn.addEventListener("click", () => {
+signInBtn.addEventListener("click", (e) => {
+  e.preventDefault();
   currentAccount = accounts.find(
     (account) => account.username === userNameInput.value
   );
@@ -331,6 +354,7 @@ signInBtn.addEventListener("click", () => {
     signInForm.classList.add("hidden");
     mainSection.classList.remove("hidden");
     profileSection.classList.add("hidden");
+    searchInput.classList.remove("hidden");
 
     displaySales(currentAccount.actions);
     displayProfileInfo(currentAccount);
@@ -344,8 +368,50 @@ const displayDate = (date) => {
   const [year, month, day] = date.split("-");
 
   if (month[0] === 0) {
-    return `${months[month[1] - 1]} ${day} ${year}`;
+    return `${months[month.slice(-1) - 1]} ${day} ${year}`;
   } else {
     return `${months[month - 1]} ${day} ${year}`;
   }
 };
+
+searchInput.addEventListener("input", (e) => {
+  const searchedActions = currentAccount.actions.filter((action) => {
+    return (
+      action.name.toLowerCase().includes(e.target.value) ||
+      action.price.toLowerCase().includes(e.target.value) ||
+      action.date.toLowerCase().includes(e.target.value)
+    );
+  });
+
+  displaySales(searchedActions);
+});
+
+addBtn.addEventListener("click", () => {
+  modal.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+});
+
+submitBtn.addEventListener("click", (e) => {
+  const newAction = {
+    name: modalNameInput.value.trim(),
+    price: modalPriceInput.value.trim(),
+    date: modalDateInput.value,
+    type: modalTypeInput.value.trim(),
+  };
+
+  currentAccount.actions.push(newAction);
+  closeModal();
+  displaySales(currentAccount.actions);
+});
+
+const closeModal = () => {
+  modal.classList.add("hidden");
+  overlay.classList.add("hidden");
+  modalNameInput.value = "";
+  modalPriceInput.value = "";
+  modalDateInput.value = "";
+  modalTypeInput.value = "";
+};
+
+overlay.addEventListener("click", closeModal);
+closeBtn.addEventListener("click", closeModal);
