@@ -179,6 +179,7 @@ const modalTypeInput = document.getElementById("actionType");
 const submitBtn = document.querySelector(".submit");
 const addBtn = document.querySelector(".add__btn");
 const closeBtn = document.querySelector(".close__btn");
+const formEl = document.querySelector(".form_add_search");
 
 const app = document.querySelector(".app");
 const signInForm = document.querySelector(".signin-form");
@@ -319,7 +320,11 @@ navLinks.forEach((link) => {
       displaySales(currentAccount.actions);
       displayProfileInfo(currentAccount);
       searchInput.classList.remove("hidden");
+      formEl.classList.remove("hidden");
+      addBtn.classList.remove("hidden");
     } else {
+      formEl.classList.add("hidden");
+      addBtn.classList.add("hidden");
       searchInput.classList.add("hidden");
     }
 
@@ -374,44 +379,50 @@ const displayDate = (date) => {
   }
 };
 
-searchInput.addEventListener("input", (e) => {
-  const searchedActions = currentAccount.actions.filter((action) => {
+searchInput.addEventListener("input", (event) => {
+  const searcheedActions = currentAccount.actions.filter((action) => {
     return (
-      action.name.toLowerCase().includes(e.target.value) ||
-      action.price.toLowerCase().includes(e.target.value) ||
-      action.date.toLowerCase().includes(e.target.value)
+      action.name.toLowerCase().includes(event.target.value.toLowerCase()) ||
+      action.price.toLowerCase().includes(event.target.value.toLowerCase()) ||
+      displayDate(action.date)
+        .toLowerCase()
+        .includes(event.target.value.toLowerCase())
     );
   });
-
-  displaySales(searchedActions);
+  displaySales(searcheedActions);
 });
 
-addBtn.addEventListener("click", () => {
+const openModal = () => {
   modal.classList.remove("hidden");
   overlay.classList.remove("hidden");
+};
+const closeModal = () => {
+  modal.classList.add("hidden");
+  overlay.classList.add("hidden");
+};
+
+addBtn.addEventListener("click", () => {
+  openModal();
 });
 
-submitBtn.addEventListener("click", (e) => {
-  const newAction = {
-    name: modalNameInput.value.trim(),
-    price: modalPriceInput.value.trim(),
-    date: modalDateInput.value,
-    type: modalTypeInput.value.trim(),
-  };
+overlay.addEventListener("click", () => {
+  closeModal();
+});
 
+closeBtn.addEventListener("click", () => {
+  closeModal();
+});
+
+submitBtn.addEventListener("click", () => {
+  const newAction = {
+    name: modalNameInput.value,
+    price: modalPriceInput.value,
+    date: modalDateInput.value,
+    type: `${modalTypeInput.value[0].toLowerCase()}${modalTypeInput.value
+      .slice(1, modalTypeInput.value.length)
+      .toLowerCase()}`,
+  };
   currentAccount.actions.push(newAction);
   closeModal();
   displaySales(currentAccount.actions);
 });
-
-const closeModal = () => {
-  modal.classList.add("hidden");
-  overlay.classList.add("hidden");
-  modalNameInput.value = "";
-  modalPriceInput.value = "";
-  modalDateInput.value = "";
-  modalTypeInput.value = "";
-};
-
-overlay.addEventListener("click", closeModal);
-closeBtn.addEventListener("click", closeModal);
